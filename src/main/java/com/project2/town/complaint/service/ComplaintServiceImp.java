@@ -36,6 +36,11 @@ public class ComplaintServiceImp implements ComplaintService{
         return complaintRepository.findByStatus(status);
     }
 
+    public List<Complaint> getAll(Long meeting_id){
+        return complaintRepository.findByMeetingId(meeting_id);
+    }
+
+
     @Override
     public boolean delete(long id) {
         boolean found = complaintRepository.existsById(id);

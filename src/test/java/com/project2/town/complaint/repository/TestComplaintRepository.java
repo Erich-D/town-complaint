@@ -21,8 +21,10 @@ public class TestComplaintRepository {
     public void setUp(){
         Complaint m1 = new Complaint(-1l,"too many villains","UNREVIEWED",1l);
         Complaint m2 = new Complaint(-2l,"not enough villains","UNREVIEWED",2l);
+        Complaint m3 = new Complaint(5l,"not enough parks","IGNORED",5l);
         cr.save(m1);
         cr.save(m2);
+        cr.save(m3);
     }
 
     @Test
@@ -64,4 +66,9 @@ public class TestComplaintRepository {
         Assertions.assertEquals(2,complaints.size());
     }
 
+    @Test
+    public void testGetByMeeting_Id(){
+        List<Complaint> complaints = cr.findByMeetingId(5l);
+        Assertions.assertEquals(1,complaints.size());
+    }
 }

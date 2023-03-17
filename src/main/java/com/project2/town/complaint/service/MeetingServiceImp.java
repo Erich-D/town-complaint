@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MeetingServiceImp implements MeetingService{
@@ -23,7 +24,8 @@ public class MeetingServiceImp implements MeetingService{
 
     @Override
     public List<Meeting> getAll() {
-        return meetingRepository.findAll();
+        List<Meeting> result = meetingRepository.findAll();
+        return result.stream().filter(m->m.getMeeting_id()>0).collect(Collectors.toList());
     }
 
     @Override

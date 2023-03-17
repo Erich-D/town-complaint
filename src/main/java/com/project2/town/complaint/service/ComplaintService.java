@@ -10,5 +10,6 @@ public interface ComplaintService {
     List<Complaint> getAll();
     Complaint update(Complaint complaint);
     List<Complaint> getAll(String status);
+    List<Complaint> getAll(Long id);
     boolean delete(long id);
 }
