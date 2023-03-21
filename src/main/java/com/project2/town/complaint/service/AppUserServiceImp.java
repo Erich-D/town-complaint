@@ -1,6 +1,7 @@
 package com.project2.town.complaint.service;
 
 import com.project2.town.complaint.entity.AppUser;
+import com.project2.town.complaint.exceptions.NoSuchUserException;
 import com.project2.town.complaint.repository.AppUserRepository;
 import com.project2.town.complaint.utils.Login;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,15 @@ public class AppUserServiceImp implements AppUserService{
     }
 
     @Override
-    public AppUser getByNameAndPassword(Login login) {
-        AppUser result = appUserRepository.findByUsernameAndPassword(login.getUsername(),login.getPassword());
-        result.setPassword(result.getPassword().replaceAll(".","*"));
+    public AppUser getByNameAndPassword(Login login)throws NoSuchUserException{
+        AppUser result = null;
+        try {
+            result = appUserRepository.findByUsernameAndPassword(login.getUsername(), login.getPassword());
+            result.setPassword(result.getPassword().replaceAll(".", "*"));
+        }catch(NullPointerException ne){
+            throw new NoSuchUserException();
+        }
+
         return result;
     }
 

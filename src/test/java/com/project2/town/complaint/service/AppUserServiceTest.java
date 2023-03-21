@@ -1,6 +1,7 @@
 package com.project2.town.complaint.service;
 
 import com.project2.town.complaint.entity.AppUser;
+import com.project2.town.complaint.exceptions.NoSuchUserException;
 import com.project2.town.complaint.repository.AppUserRepository;
 import com.project2.town.complaint.utils.Login;
 import org.junit.jupiter.api.Assertions;
@@ -68,7 +69,12 @@ public class AppUserServiceTest {
         AppUser m1 = new AppUser(5l,"adamGator","pass123","COUNCIL");
         Login lg = new Login("adamGator","pass123");
         Mockito.when(ar.findByUsernameAndPassword("adamGator","pass123")).thenReturn(m1);
-        AppUser m2 = as.getByNameAndPassword(lg);
+        AppUser m2 = null;
+        try {
+            m2 = as.getByNameAndPassword(lg);
+        }catch(NoSuchUserException ne){
+
+        }
         Assertions.assertEquals("adamGator",m2.getUsername());
         Assertions.assertEquals("*******",m2.getPassword());
     }

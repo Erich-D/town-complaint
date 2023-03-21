@@ -4,6 +4,8 @@ import com.project2.town.complaint.entity.Complaint;
 import com.project2.town.complaint.service.ComplaintService;
 import com.project2.town.complaint.utils.NumCheck;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +19,8 @@ public class ComplaintController {
     ComplaintService complaintService;
 
     @PostMapping
-    public Complaint insert(@RequestBody Complaint complaint){
-        return complaintService.insert(complaint);
+    public ResponseEntity<Complaint> insert(@RequestBody Complaint complaint){
+            return new ResponseEntity<Complaint>(complaintService.insert(complaint), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -31,13 +33,21 @@ public class ComplaintController {
     }
 
     @GetMapping("/{id}")
-    public Complaint getById(@PathVariable("id") Long identifier){
-        return complaintService.getById(identifier);
+    public ResponseEntity<Complaint> getById(@PathVariable("id") Long identifier){
+        try {
+            return new ResponseEntity<>(complaintService.getById(identifier),HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new Complaint(),HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping()
-    public Complaint update(@RequestBody Complaint complaint){
-        return complaintService.update(complaint);
+    public ResponseEntity<Complaint> update(@RequestBody Complaint complaint){
+        try {
+            return new ResponseEntity<>(complaintService.update(complaint),HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new Complaint(),HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{deleteId}")

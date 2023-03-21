@@ -3,6 +3,8 @@ package com.project2.town.complaint.controller;
 import com.project2.town.complaint.entity.Meeting;
 import com.project2.town.complaint.service.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,8 +17,9 @@ public class MeetingController {
     MeetingService meetingService;
 
     @PostMapping
-    public Meeting insert(@RequestBody Meeting meeting){
-        return meetingService.insert(meeting);
+    public ResponseEntity<Meeting> insert(@RequestBody Meeting meeting){
+
+        return new ResponseEntity<>(meetingService.insert(meeting), HttpStatus.CREATED);
     }
 
     @GetMapping()
@@ -25,13 +28,21 @@ public class MeetingController {
     }
 
     @GetMapping("/{id}")
-    public Meeting getById(@PathVariable("id") Long identifier){
-        return meetingService.getById(identifier);
+    public ResponseEntity<Meeting> getById(@PathVariable("id") Long identifier){
+        try {
+            return new ResponseEntity<>(meetingService.getById(identifier),HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new Meeting(),HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping()
-    public Meeting update(@RequestBody Meeting meeting){
-        return meetingService.update(meeting);
+    public ResponseEntity<Meeting> update(@RequestBody Meeting meeting){
+        try {
+            return new ResponseEntity<>(meetingService.update(meeting),HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new Meeting(),HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{deleteId}")
