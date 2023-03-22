@@ -1,7 +1,7 @@
 package com.project2.town.complaint.controller;
 
+import com.project2.town.complaint.dto.AppUserDTO;
 import com.project2.town.complaint.entity.AppUser;
-import com.project2.town.complaint.entity.Meeting;
 import com.project2.town.complaint.service.AppUserService;
 import com.project2.town.complaint.utils.Login;
 import org.slf4j.Logger;
@@ -21,18 +21,22 @@ public class AppUserController {
     Logger logger1 = LoggerFactory.getLogger(AppUserController.class);
 
     @PostMapping
-    public AppUser insert(@RequestBody AppUser appUser){
-        return appUserService.insert(appUser);
+    public AppUser insert(@RequestBody AppUserDTO appUser){
+        AppUser pAppuser = new AppUser();
+        pAppuser.setUsername(appUser.getUsername());
+        pAppuser.setPassword(appUser.getPassword());
+        pAppuser.setRole(appUser.getRole());
+        return appUserService.insert(pAppuser);
     }
 
     @PatchMapping
     public ResponseEntity<AppUser> getUser(@RequestBody Login login){
         try {
             logger1.info("user logging in");
-            return new ResponseEntity<AppUser>(appUserService.getByNameAndPassword(login), HttpStatus.OK);
+            return new ResponseEntity<>(appUserService.getByNameAndPassword(login), HttpStatus.OK);
         }catch(Exception e){
             logger1.error("No user found");
-            return new ResponseEntity<AppUser>(new AppUser(), HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(new AppUser(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 }

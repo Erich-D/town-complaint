@@ -1,12 +1,12 @@
 package com.project2.town.complaint.controller;
 
+import com.project2.town.complaint.dto.ComplaintDTO;
 import com.project2.town.complaint.entity.Complaint;
 import com.project2.town.complaint.service.ComplaintService;
 import com.project2.town.complaint.utils.NumCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,15 +19,18 @@ public class ComplaintController {
     ComplaintService complaintService;
 
     @PostMapping
-    public ResponseEntity<Complaint> insert(@RequestBody Complaint complaint){
-            return new ResponseEntity<Complaint>(complaintService.insert(complaint), HttpStatus.CREATED);
+    public ResponseEntity<Complaint> insert(@RequestBody ComplaintDTO rComplaint){
+            Complaint complaint = new Complaint();
+            complaint.setDescription(rComplaint.getDescription());
+            complaint.setStatus(rComplaint.getStatus());
+            complaint.setMeeting_id(rComplaint.getMeeting_id());
+            return new ResponseEntity<>(complaintService.insert(complaint), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public List<Complaint> getAll(@RequestParam(required = false, value = "status") String flag, @RequestParam(required = false, value="id") String id){
         if(flag==null&&id==null)return complaintService.getAll();
         else if (id!=null && NumCheck.isNumeric(id)) {
-            System.out.println(id);
             return complaintService.getAll(Long.parseLong(id));
         } else return complaintService.getAll(flag);
     }
@@ -42,8 +45,13 @@ public class ComplaintController {
     }
 
     @PutMapping()
-    public ResponseEntity<Complaint> update(@RequestBody Complaint complaint){
+    public ResponseEntity<Complaint> update(@RequestBody ComplaintDTO rComplaint){
         try {
+            Complaint complaint = new Complaint();
+            complaint.setComplaint_id(rComplaint.getComplaint_id());
+            complaint.setDescription(rComplaint.getDescription());
+            complaint.setStatus(rComplaint.getStatus());
+            complaint.setMeeting_id(rComplaint.getMeeting_id());
             return new ResponseEntity<>(complaintService.update(complaint),HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(new Complaint(),HttpStatus.NOT_FOUND);
